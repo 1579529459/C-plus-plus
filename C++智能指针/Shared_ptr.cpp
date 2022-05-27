@@ -85,7 +85,7 @@ public:
 		re_count = new int(1);
 	}
 
-	Shared_ptr(const Shared_ptr& tmp)//¿½±´¹¹Ôì
+	Shared_ptr(const Shared_ptr& tmp)//æ‹·è´æ„é€ 
 	{
 		_ptr = tmp._ptr;
 		_mutex = tmp._mutex;
@@ -102,12 +102,17 @@ public:
 			re_count = tmp.re_count;
 			_ptr = tmp._ptr;
 			_mutex = tmp._mutex;
-			// ¼ÓËø»òÕßÊ¹ÓÃ¼Ó1µÄÔ­×Ó²Ù×÷
+			// åŠ é”æˆ–è€…ä½¿ç”¨åŠ 1çš„åŸå­æ“ä½œ
 			_mutex->lock();
 			++(*re_count);
 			_mutex->unlock();
 		}
 		return *this;
+	}
+	~Shared_ptr()
+	{
+		Release();
+		cout << "xigou" << endl;
 	}
 	T& operator*() { return  *_ptr; }
 	T* operator->() { return  _ptr; }
@@ -119,7 +124,7 @@ public:
 	void Release()
 	{
 		bool flag = false;
-		// ¼ÓËø»òÕßÊ¹ÓÃ¼Ó1µÄÔ­×Ó²Ù×÷
+		// åŠ é”æˆ–è€…ä½¿ç”¨åŠ 1çš„åŸå­æ“ä½œ
 		_mutex->lock();
 		if (--(*re_count) == 0 && _ptr)
 		{
@@ -131,7 +136,7 @@ public:
 		_mutex->unlock();
 		if (flag) delete _mutex;
 	}
-	////È±Ïİ£º¿ÉÄÜ»áµ½µ¼ÖÂÑ­»·ÒıÓÃ£¬Èç¹û³öÏÖÁËÑ­»·ÒıÓÃ£¬²ÉÓÃweak_ptrÅäºÏ½â¾ö
+	////ç¼ºé™·ï¼šå¯èƒ½ä¼šåˆ°å¯¼è‡´å¾ªç¯å¼•ç”¨ï¼Œå¦‚æœå‡ºç°äº†å¾ªç¯å¼•ç”¨ï¼Œé‡‡ç”¨weak_ptré…åˆè§£å†³
 };
 //
 int main()
